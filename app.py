@@ -65,7 +65,7 @@ def signup():
             return redirect(url_for('login'))
 
         if role == 'hospital':
-            correct_passkey = "ENV.PASSKEY"  # The passkey required for hospitals
+            correct_passkey = "hospitalpasskey"  # The passkey required for hospitals
             if passkey != correct_passkey:
                 flash('Invalid passkey for hospital registration.')
                 return redirect(url_for('signup'))

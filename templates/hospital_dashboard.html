@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Hospital Dashboard</h2>
+    <form method="POST">
+        <label for="bed_count">Total Beds:</label>
+        <input type="number" id="bed_count" name="bed_count" value="{{ hospital_info.bed_count if hospital_info else '' }}" required>
+        <label for="available_beds">Available Beds:</label>
+        <input type="number" id="available_beds" name="available_beds" value="{{ hospital_info.available_beds if hospital_info else '' }}" required>
+        <label for="doctor_availability">Doctor Availability:</label>
+        <textarea id="doctor_availability" name="doctor_availability" required>{{ hospital_info.doctor_availability if hospital_info else '' }}</textarea>
+        <button type="submit">Update</button>
+    </form>
+    <a href="{{ url_for('hospital_interface') }}">Back to Interface</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>

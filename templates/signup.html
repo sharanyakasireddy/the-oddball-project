@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function showMessage(message) {
+            var messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+        }
+
+        function handleButtonClick(role) {
+            var message = '';
+            var passkeyField = document.getElementById('passkey-field');
+            var roleInput = document.getElementById('role');
+            roleInput.value = role;
+
+            if (role === 'customer') {
+                message = 'Welcome customer, signup successful, please login';
+                passkeyField.style.display = 'none'; // Hide the passkey field for customers
+            } else if (role === 'hospital') {
+                message = 'Please provide the passkey to continue';
+                passkeyField.style.display = 'block'; // Show the passkey field for hospitals
+            }
+            showMessage(message);
+        }
+    </script>
+    <style>
+        #message {
+            display: none;
+            color: green;
+            margin-top: 10px;
+        }
+        #passkey-field {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Signup</h2>
+    <form method="POST" action="{{ url_for('signup') }}">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        
+        <label for="role">Role</label>
+        <input type="hidden" id="role" name="role">
+
+        <div id="passkey-field">
+            <label for="passkey">Passkey</label>
+            <input type="password" id="passkey" name="passkey">
+        </div>
+
+        <button type="button" onclick="handleButtonClick('customer')">Sign Up as Customer</button>
+        <button type="button" onclick="handleButtonClick('hospital')">Sign Up as Hospital</button>
+        
+        <div id="message"></div>
+        
+        <button type="submit">Submit</button>
+    </form>
+    
+    <p>Already have an account? <a href="{{ url_for('login') }}">Log in here</a></p>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
+
+
+

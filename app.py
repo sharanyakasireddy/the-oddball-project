@@ -19,6 +19,16 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(150), nullable=False)
     role = db.Column(db.String(50), nullable=False)  # 'customer' or 'hospital'
 
+# Booking model
+class Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    patient_name = db.Column(db.String(150), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
+    sex = db.Column(db.String(10), nullable=False)
+    blood_group = db.Column(db.String(10), nullable=False)
+    hospital_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    hospital = db.relationship('User', backref=db.backref('appointments', lazy=True))
+
 # Create DB if it doesn't exist
 with app.app_context():
     db.create_all()
@@ -86,7 +96,11 @@ def signup():
 def hospital_interface():
     if current_user.role != 'hospital':
         return redirect(url_for('login'))
-    return render_template('hospital_interface.html')
+
+    # Get all bookings for this hospital
+    bookings = Booking.query.filter_by(hospital_id=current_user.id).all()
+    
+    return render_template('hospital_interface.html', bookings=bookings)
 
 # Customer Interface
 @app.route('/customer')
@@ -150,10 +164,19 @@ def confirm_booking(hospital_id):
     sex = request.form.get('sex')
     blood_group = request.form.get('blood_group')
     
-    # Implement logic to store or process the booking here
-    
+    # Create a new booking record
+    new_booking = Booking(
+        patient_name=patient_name,
+        age=age,
+        sex=sex,
+        blood_group=blood_group,
+        hospital_id=hospital_id
+    )
+    db.session.add(new_booking)
+    db.session.commit()
+
     flash(f'Booking confirmed for {patient_name} at {User.query.get(hospital_id).username}!')
-    return redirect(url_for('customer_interface'))
+    return redirect(url_for('hospital_interface'))
 
 # Logout route
 @app.route('/logout')
@@ -180,7 +203,10 @@ def add_test_hospitals():
 
         db.session.commit()
 
+<<<<<<< HEAD
+=======
 # Beds & OPD Availability
+>>>>>>> ab0842f2a3a45221061aebabaadfd82ae93b6b79
 @app.route('/beds_opd_availability')
 @login_required
 def beds_opd_availability():

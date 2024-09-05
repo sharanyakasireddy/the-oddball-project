@@ -120,6 +120,28 @@ def add_test_hospitals():
 
         db.session.commit()
 
+
+
+
+@app.route('/beds_opd_availability')
+@login_required
+def beds_opd_availability():
+    # Render the Beds & OPD Availability page
+    return render_template('beds_opd_availability.html')
+
+@app.route('/appointment_requests')
+@login_required
+def appointment_requests():
+    # Render the Appointment Requests page
+    return render_template('appointment_requests.html')
+
+@app.route('/incoming_emergency_patients')
+@login_required
+def incoming_emergency_patients():
+    # Render the Incoming Emergency Patients page
+    return render_template('incoming_emergency_patients.html')
+
+
 if __name__ == '__main__':
     add_test_hospitals()  # Add the test hospitals when the app starts
     app.run(debug=True)

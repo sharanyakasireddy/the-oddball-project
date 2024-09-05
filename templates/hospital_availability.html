@@ -5,13 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital Availability</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Add some styles for better layout */
+        .hospital-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hospital-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hospital-details {
+            flex: 1;
+        }
+
+        .hospital-map {
+            width: 300px;
+            height: 200px;
+        }
+    </style>
 </head>
 <body>
     <!-- Toolbar -->
     <div class="toolbar">
         <a href="{{ url_for('hospital_availability') }}" class="active">Hospital Availability</a>
         <a href="{{ url_for('emergency_contact') }}">Emergency Contact</a>
-        <a href="{{ url_for('navigation_directions') }}">Navigation & Directions</a>
         <a href="{{ url_for('queue_status') }}">Queue Status</a>
         <a href="{{ url_for('booking_pre_registration') }}">Booking & Pre-Registration</a>
     </div>
@@ -19,7 +41,30 @@
     <!-- Page Content -->
     <main>
         <h2>Hospital Availability</h2>
-        <p>Information about hospital availability will be displayed here.</p>
+        <div class="hospital-list">
+            <div class="hospital-item">
+                <div class="hospital-details">
+                    <h3>Apollo Hospital, Jubilee Hills</h3>
+                    <p>Available beds: 20 | OPD: Open</p>
+                </div>
+                <div class="hospital-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60910.79236251752!2d78.37156283086142!3d17.415409468251248!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb976634652a37%3A0xeb778fba80ddd5bf!2sApollo%20Hospitals%20Jubilee%20Hills%20Hyderabad!5e0!3m2!1sen!2sin!4v1725563618548!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+
+            <div class="hospital-item">
+                <div class="hospital-details">
+                    <h3>Care Hospital, Banjara Hills</h3>
+                    <p>Available beds: 15 | OPD: Open</p>
+                </div>
+                <div class="hospital-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60910.74056271273!2d78.37156277020188!3d17.415564804496004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb972ff51ff959%3A0x55376a3d51b6637!2sCARE%20Hospitals!5e0!3m2!1sen!2sin!4v1725563674716!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+
+            <!-- Add more hospitals similarly -->
+        </div>
+
         <a href="{{ url_for('customer_interface') }}">Back to Customer Interface</a>
     </main>
 </body>

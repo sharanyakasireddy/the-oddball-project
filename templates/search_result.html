@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Result</title>
+</head>
+<body>
+    <h1>Search Result</h1>
+    
+    {% if result %}
+        <h3>Place Found:</h3>
+        <p>{{ result }}</p>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    
+    <a href="{{ url_for('search_place') }}">Search Again</a>
+    <a href="{{ url_for('customer_interface') }}">Back to Customer Dashboard</a>
+</body>
+</html>
+

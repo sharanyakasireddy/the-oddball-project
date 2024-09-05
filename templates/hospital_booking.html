@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Booking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="toolbar">
+            <a href="{{ url_for('hospital_interface') }}">Home</a>
+            <a href="{{ url_for('booking_pre_registration') }}">Bookings & Pre-Registrations</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </header>
+
+    <main>
+        <h2>Book an Appointment at {{ hospital.username }}</h2>
+        
+        <form class="booking-form" method="POST" action="{{ url_for('confirm_booking', hospital_id=hospital.id) }}">
+            <label for="patient_name">Patient Name:</label>
+            <input type="text" id="patient_name" name="patient_name" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="sex">Sex:</label>
+            <select id="sex" name="sex" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="blood_group">Blood Group:</label>
+            <input type="text" id="blood_group" name="blood_group" required>
+
+            <label for="doctor_type">Type of Doctor:</label>
+            <select id="doctor_type" name="doctor_type" required>
+                <option value="cardiologist">Cardiologist</option>
+                <option value="neurologist">Neurologist</option>
+                <option value="orthopedic">Orthopedic</option>
+            </select>
+
+            <button type="submit">Confirm Booking</button>
+        </form>
+    </main>
+</body>
+</html>

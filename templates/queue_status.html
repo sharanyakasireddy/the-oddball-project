@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Interface</title>
+    <title>Queue Status</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -12,15 +12,15 @@
         <a href="{{ url_for('hospital_availability') }}">Hospital Availability</a>
         <a href="{{ url_for('emergency_contact') }}">Emergency Contact</a>
         <a href="{{ url_for('navigation_directions') }}">Navigation & Directions</a>
-        <a href="{{ url_for('queue_status') }}">Queue Status</a>
+        <a href="{{ url_for('queue_status') }}" class="active">Queue Status</a>
         <a href="{{ url_for('booking_pre_registration') }}">Booking & Pre-Registration</a>
     </div>
 
     <!-- Page Content -->
     <main>
-        <h2>Welcome, Customer!</h2>
-        <p>This is the customer interface.</p>
-        <a href="{{ url_for('logout') }}">Logout</a>
+        <h2>Queue Status</h2>
+        <p>Queue status information will be displayed here.</p>
+        <a href="{{ url_for('customer_interface') }}">Back to Customer Interface</a>
     </main>
 </body>
 </html>

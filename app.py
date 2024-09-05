@@ -32,7 +32,7 @@ def load_user(user_id):
 def home():
     return redirect(url_for('login'))
 
-# Home/Login page
+# Login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -49,7 +49,7 @@ def login():
             flash('Login failed. Check your username and password.')
     return render_template('login.html')
 
-# Signup page (for customers and hospitals)
+# Signup page
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -94,6 +94,65 @@ def customer_interface():
     if current_user.role != 'customer':
         return redirect(url_for('login'))
     return render_template('customer_interface.html')
+
+# Toolbar Option Routes
+@app.route('/hospital_availability')
+@login_required
+def hospital_availability():
+    return render_template('hospital_availability.html')
+
+@app.route('/emergency_contact')
+@login_required
+def emergency_contact():
+    return render_template('emergency_contact.html')
+
+@app.route('/navigation_directions')
+@login_required
+def navigation_directions():
+    return render_template('navigation_directions.html')
+
+@app.route('/queue_status')
+@login_required
+def queue_status():
+    return render_template('queue_status.html')
+
+# Bookings & Pre-Registration
+@app.route('/booking_pre_registration')
+@login_required
+def booking_pre_registration():
+    if current_user.role != 'customer':
+        return redirect(url_for('login'))
+    
+    # Query all hospitals from the database
+    hospitals = User.query.filter_by(role='hospital').all()
+    
+    # Pass the list of hospitals to the template
+    return render_template('booking_pre_registration.html', hospitals=hospitals)
+
+# Handle the hospital booking
+@app.route('/hospital_booking/<int:hospital_id>', methods=['POST'])
+@login_required
+def hospital_booking(hospital_id):
+    # Retrieve the hospital information using hospital_id
+    hospital = User.query.get_or_404(hospital_id)
+    
+    # Render a template or handle the booking logic here
+    return render_template('hospital_booking.html', hospital=hospital)
+
+# Confirm booking
+@app.route('/confirm_booking/<int:hospital_id>', methods=['POST'])
+@login_required
+def confirm_booking(hospital_id):
+    # Get the form data
+    patient_name = request.form.get('patient_name')
+    age = request.form.get('age')
+    sex = request.form.get('sex')
+    blood_group = request.form.get('blood_group')
+    
+    # Implement logic to store or process the booking here
+    
+    flash(f'Booking confirmed for {patient_name} at {User.query.get(hospital_id).username}!')
+    return redirect(url_for('customer_interface'))
 
 # Logout route
 @app.route('/logout')
@@ -145,7 +204,3 @@ def incoming_emergency_patients():
 if __name__ == '__main__':
     add_test_hospitals()  # Add the test hospitals when the app starts
     app.run(debug=True)
-
-
-
-

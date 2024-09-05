@@ -4,23 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital Availability</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Toolbar styling */
+        .toolbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        .toolbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .toolbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .toolbar a.active {
+            font-weight: bold;
+            color: white;
+            background-color: #4CAF50;
+        }
+
+        /* Styling for the main content */
+        main {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 80vh; /* Adjusts the height to center content vertically */
+            text-align: center;
+        }
+
+        /* Back button styling */
+        a.button {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        a.button:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive toolbar layout */
+        @media screen and (max-width: 600px) {
+            .toolbar a {
+                display: block;
+                text-align: left;
+                padding: 10px;
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Toolbar -->
     <div class="toolbar">
-        <a href="{{ url_for('hospital_availability') }}" class="active">Hospital Availability</a>
-        <a href="{{ url_for('emergency_contact') }}">Emergency Contact</a>
-        <a href="{{ url_for('navigation_directions') }}">Navigation & Directions</a>
-        <a href="{{ url_for('queue_status') }}">Queue Status</a>
-        <a href="{{ url_for('booking_pre_registration') }}">Booking & Pre-Registration</a>
+        <a href="{{ url_for('hospital_availability') }}" class="active"><i class="fas fa-hospital"></i> Hospital Availability</a>
+        <a href="{{ url_for('emergency_contact') }}"><i class="fas fa-phone-alt"></i> Emergency Contact</a>
+        <a href="{{ url_for('navigation_directions') }}"><i class="fas fa-map-marker-alt"></i> Navigation & Directions</a>
+        <a href="{{ url_for('queue_status') }}"><i class="fas fa-list"></i> Queue Status</a>
+        <a href="{{ url_for('booking_pre_registration') }}"><i class="fas fa-calendar-check"></i> Booking & Pre-Registration</a>
     </div>
 
     <!-- Page Content -->
     <main>
         <h2>Hospital Availability</h2>
-        <p>Information about hospital availability will be displayed here.</p>
-        <a href="{{ url_for('customer_interface') }}">Back to Customer Interface</a>
+        <p>Information about hospital availability will be dynamically loaded here.</p>
+        <a href="{{ url_for('customer_interface') }}" class="button">Back to Customer Interface</a>
     </main>
 </body>
 </html>

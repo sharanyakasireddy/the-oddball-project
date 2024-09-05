@@ -203,10 +203,6 @@ def add_test_hospitals():
 
         db.session.commit()
 
-<<<<<<< HEAD
-=======
-# Beds & OPD Availability
->>>>>>> ab0842f2a3a45221061aebabaadfd82ae93b6b79
 @app.route('/beds_opd_availability')
 @login_required
 def beds_opd_availability():

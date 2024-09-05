@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search for a Place</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Search for Nearby Hospitals</h2>
+    <form method="POST">
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" required>
+        <br>
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" required>
+        <br>
+        <input type="submit" value="Search">
+    </form>
+
+    <!-- Display results -->
+    {% if results %}
+        <h3>Nearby Hospitals:</h3>
+        <ul>
+            {% for place in results %}
+                <li>
+                    <strong>{{ place.name }}</strong><br>
+                    Address: {{ place.vicinity }}<br>
+                    Rating: {{ place.rating }}<br>
+                    <a href="https://www.google.com/maps/place/?q=place_id:{{ place.place_id }}" target="_blank">View on Google Maps</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{{ url_for('customer_interface') }}">Back to Customer Interface</a>
+</body>
+</html>

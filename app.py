@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
@@ -17,6 +18,16 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     role = db.Column(db.String(50), nullable=False)  # 'customer' or 'hospital'
+
+# Booking model
+class Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    patient_name = db.Column(db.String(150), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
+    sex = db.Column(db.String(10), nullable=False)
+    blood_group = db.Column(db.String(10), nullable=False)
+    hospital_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    hospital = db.relationship('User', backref=db.backref('appointments', lazy=True))
 
 # Create DB if it doesn't exist
 with app.app_context():
@@ -85,7 +96,11 @@ def signup():
 def hospital_interface():
     if current_user.role != 'hospital':
         return redirect(url_for('login'))
-    return render_template('hospital_interface.html')
+
+    # Get all bookings for this hospital
+    bookings = Booking.query.filter_by(hospital_id=current_user.id).all()
+    
+    return render_template('hospital_interface.html', bookings=bookings)
 
 # Customer Interface
 @app.route('/customer')
@@ -149,10 +164,19 @@ def confirm_booking(hospital_id):
     sex = request.form.get('sex')
     blood_group = request.form.get('blood_group')
     
-    # Implement logic to store or process the booking here
-    
+    # Create a new booking record
+    new_booking = Booking(
+        patient_name=patient_name,
+        age=age,
+        sex=sex,
+        blood_group=blood_group,
+        hospital_id=hospital_id
+    )
+    db.session.add(new_booking)
+    db.session.commit()
+
     flash(f'Booking confirmed for {patient_name} at {User.query.get(hospital_id).username}!')
-    return redirect(url_for('customer_interface'))
+    return redirect(url_for('hospital_interface'))
 
 # Logout route
 @app.route('/logout')
@@ -179,28 +203,65 @@ def add_test_hospitals():
 
         db.session.commit()
 
-
-
-
 @app.route('/beds_opd_availability')
 @login_required
 def beds_opd_availability():
     # Render the Beds & OPD Availability page
     return render_template('beds_opd_availability.html')
 
+# Appointment Requests
 @app.route('/appointment_requests')
 @login_required
 def appointment_requests():
     # Render the Appointment Requests page
     return render_template('appointment_requests.html')
 
+# Incoming Emergency Patients
 @app.route('/incoming_emergency_patients')
 @login_required
 def incoming_emergency_patients():
     # Render the Incoming Emergency Patients page
     return render_template('incoming_emergency_patients.html')
 
+# Search for a Place
+@app.route('/search_place', methods=['GET', 'POST'])
+@login_required
+def search_place():
+    if request.method == 'POST':
+        latitude = request.form.get('latitude')
+        longitude = request.form.get('longitude')
+        
+        # URL for the Google Places API Nearby Search
+        url = "https://google-maps-api-free.p.rapidapi.com/google-places-nearby-search"
+        querystring = {
+            "location": f"{latitude},{longitude}",
+            "radius": "5000",  # Search within a 5km radius
+            "type": "hospital"
+        }
+
+        headers = {
+            "x-rapidapi-key": "9dfefe5774msh77168a4e8db1317p1396e5jsn118ab7f95baa",
+            "x-rapidapi-host": "google-maps-api-free.p.rapidapi.com"
+        }
+
+        try:
+            response = requests.get(url, headers=headers, params=querystring)
+            response.raise_for_status()
+            data = response.json()
+            if 'results' in data:
+                results = data['results']
+                return render_template('search_place.html', results=results)
+            else:
+                flash('No results found.')
+
+        except requests.exceptions.HTTPError as http_err:
+            flash(f'HTTP error occurred: {http_err}')
+        except Exception as err:
+            flash(f'Other error occurred: {err}')
+
+    return render_template('search_place.html')
 
 if __name__ == '__main__':
     add_test_hospitals()  # Add the test hospitals when the app starts
     app.run(debug=True)
+
